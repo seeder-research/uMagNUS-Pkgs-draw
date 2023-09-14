@@ -1,2 +1,2 @@
 # uMagNUS-Pkgs-draw
-Go package (draw) for uMagNUS
+Golang package (draw) for uMagNUS
