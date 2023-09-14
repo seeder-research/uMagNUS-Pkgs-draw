@@ -5,11 +5,12 @@ import (
 	"io"
 	"math"
 
+	data "github.com/seeder-research/uMagNUS-Pkgs-data/data"
 	svgo "github.com/seeder-research/uMagNUS-Pkgs-svgo/svgo"
 )
 
 // Renders svg image of vector data.
-func SVG(out io.Writer, arr [3][][][]DataType) {
+func SVG(out io.Writer, arr [3][][][]data.DataType) {
 
 	h, w := len(arr[0][0]), len(arr[0][0][0])
 

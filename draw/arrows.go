@@ -9,7 +9,7 @@ import (
 	raster "github.com/seeder-research/uMagNUS-Pkgs-freetype/raster"
 )
 
-func drawArrows(img *image.RGBA, arr [3][][][]DataType, sub int) {
+func drawArrows(img *image.RGBA, arr [3][][][]data.DataType, sub int) {
 	c := NewCanvas(img)
 
 	Na := data.SizeOf(arr[0]) // number of arrows
@@ -18,16 +18,16 @@ func drawArrows(img *image.RGBA, arr [3][][][]DataType, sub int) {
 	Na[Y] = imax(Na[Y]/sub, 1)
 	Na[Z] = 1
 	small := data.Downsample(arr[:], Na)
-	S := DataType(sub)
+	S := data.DataType(sub)
 
 	for iy := 0; iy < Na[Y]; iy++ {
-		Ay := DataType(h) - (DataType(iy)+0.5)*S
+		Ay := data.DataType(h) - (data.DataType(iy)+0.5)*S
 		for ix := 0; ix < Na[X]; ix++ {
-			Ax := (DataType(ix) + 0.5) * S
+			Ax := (data.DataType(ix) + 0.5) * S
 			mx := small[X][0][iy][ix]
 			my := small[Y][0][iy][ix]
 			mz := small[Z][0][iy][ix]
-			c.Arrow(Ax, Ay, mx, my, mz, DataType(sub))
+			c.Arrow(Ax, Ay, mx, my, mz, data.DataType(sub))
 
 		}
 	}
@@ -54,12 +54,12 @@ func NewCanvas(img *image.RGBA) *Canvas {
 	return c
 }
 
-func (c *Canvas) Arrow(x, y, mx, my, mz, size DataType) {
+func (c *Canvas) Arrow(x, y, mx, my, mz, size data.DataType) {
 
 	arrlen := 0.4 * size
 	arrw := 0.2 * size
 
-	norm := DataType(math.Sqrt(float64(mx*mx + my*my + mz*mz)))
+	norm := data.DataType(math.Sqrt(float64(mx*mx + my*my + mz*mz)))
 	if norm == 0 {
 		return
 	}
@@ -68,9 +68,9 @@ func (c *Canvas) Arrow(x, y, mx, my, mz, size DataType) {
 	}
 
 	theta := math.Atan2(float64(my), float64(mx))
-	cos := DataType(math.Cos(theta))
-	sin := DataType(math.Sin(theta))
-	r1 := arrlen * norm * DataType(math.Cos(math.Asin(float64(mz))))
+	cos := data.DataType(math.Cos(theta))
+	sin := data.DataType(math.Sin(theta))
+	r1 := arrlen * norm * data.DataType(math.Cos(math.Asin(float64(mz))))
 	r2 := arrw * norm
 
 	pt1 := pt((r1*cos)+x, -(r1*sin)+y)
@@ -86,11 +86,11 @@ func (c *Canvas) Arrow(x, y, mx, my, mz, size DataType) {
 	c.rasterizer.AddPath(path)
 }
 
-func pt(x, y DataType) raster.Point {
+func pt(x, y data.DataType) raster.Point {
 	return raster.Point{fix32(x), fix32(y)}
 }
 
-func fix32(x DataType) raster.Fix32 {
+func fix32(x data.DataType) raster.Fix32 {
 	return raster.Fix32(int(x * (1 << 8)))
 }
 

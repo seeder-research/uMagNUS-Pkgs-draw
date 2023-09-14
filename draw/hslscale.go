@@ -3,18 +3,20 @@ package draw
 import (
 	"image/color"
 	"math"
+
+	data "github.com/seeder-research/uMagNUS-Pkgs-data/data"
 )
 
 // Colormap for 3D vector data.
-func HSLMap(x, y, z DataType) color.RGBA {
+func HSLMap(x, y, z data.DataType) color.RGBA {
 	s := sqrtf(x*x + y*y + z*z)
 	l := 0.5*z + 0.5
-	h := DataType(math.Atan2(float64(y), float64(x)))
+	h := data.DataType(math.Atan2(float64(y), float64(x)))
 	return HSLtoRGB(h, s, l)
 }
 
 // h = 0..2pi, s=0..1, l=0..1
-func HSLtoRGB(h, s, l DataType) color.RGBA {
+func HSLtoRGB(h, s, l data.DataType) color.RGBA {
 	if s > 1 {
 		s = 1
 	}
@@ -30,7 +32,7 @@ func HSLtoRGB(h, s, l DataType) color.RGBA {
 		h -= 6
 	}
 
-	var c DataType // chroma
+	var c data.DataType // chroma
 	if l <= 0.5 {
 		c = 2 * l * s
 	} else {
@@ -38,7 +40,7 @@ func HSLtoRGB(h, s, l DataType) color.RGBA {
 	}
 	x := c * (1 - abs(fmod(h, 2)-1))
 
-	var r, g, b DataType
+	var r, g, b data.DataType
 
 	switch {
 	case 0 <= h && h < 1:
@@ -62,7 +64,7 @@ func HSLtoRGB(h, s, l DataType) color.RGBA {
 }
 
 // modulo
-func fmod(number, mod DataType) DataType {
+func fmod(number, mod data.DataType) data.DataType {
 	for number < mod {
 		number += mod
 	}
@@ -72,13 +74,13 @@ func fmod(number, mod DataType) DataType {
 	return number
 }
 
-func abs(number DataType) DataType {
+func abs(number data.DataType) data.DataType {
 	if number < 0 {
 		return -number
 	} // else
 	return number
 }
 
-func sqrtf(x DataType) DataType {
-	return DataType(math.Sqrt(float64(x)))
+func sqrtf(x data.DataType) data.DataType {
+	return data.DataType(math.Sqrt(float64(x)))
 }

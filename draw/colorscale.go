@@ -1,14 +1,18 @@
 package draw
 
-import "image/color"
-import "fmt"
+import (
+	"image/color"
+	"fmt"
+
+	data "github.com/seeder-research/uMagNUS-Pkgs-data/data"
+)
 
 type ColorMapSpec struct {
 	Cmap  []color.RGBA
 	Ccomp int
 }
 
-func ColorMap(min, max, value DataType, colormap ...color.RGBA) color.RGBA {
+func ColorMap(min, max, value data.DataType, colormap ...color.RGBA) color.RGBA {
 	// default colormap: black-white
 	if len(colormap) < 1 {
 		colormap = []color.RGBA{{0, 0, 0, 255}, {255, 255, 255, 255}}

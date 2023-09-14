@@ -49,21 +49,21 @@ func On(img *image.RGBA, f *data.Slice, fmin, fmax string, arrowSize int, colorm
 	}
 }
 
-func parseMinMax(f *data.Slice, fmin, fmax string) (min, max DataType) {
+func parseMinMax(f *data.Slice, fmin, fmax string) (min, max data.DataType) {
 	min, max = extrema(f.Host()[0])
 	if fmin != "auto" {
 		m, err := strconv.ParseFloat(fmin, 32)
 		if err != nil {
 			util.Fatal("draw: scale:", err)
 		}
-		min = DataType(m)
+		min = data.DataType(m)
 	}
 	if fmax != "auto" {
 		m, err := strconv.ParseFloat(fmax, 32)
 		if err != nil {
 			util.Fatal("draw: scale:", err)
 		}
-		max = DataType(m)
+		max = data.DataType(m)
 	}
 	if min == max {
 		min -= 1
@@ -74,14 +74,14 @@ func parseMinMax(f *data.Slice, fmin, fmax string) (min, max DataType) {
 
 // Draws rank 4 tensor (3D vector field) as image
 // averages data over X (usually thickness of thin film)
-func drawVectors(img *image.RGBA, arr [3][][][]DataType, arrowSize int) {
+func drawVectors(img *image.RGBA, arr [3][][][]data.DataType, arrowSize int) {
 	w, h := len(arr[X][0][0]), len(arr[X][0])
 	d := len(arr[X])
-	norm := DataType(d)
+	norm := data.DataType(d)
 	*img = *recycle(img, w, h)
 	for iy := 0; iy < h; iy++ {
 		for ix := 0; ix < w; ix++ {
-			var x, y, z DataType = 0., 0., 0.
+			var x, y, z data.DataType = 0., 0., 0.
 			for iz := 0; iz < d; iz++ {
 				x += arr[0][iz][iy][ix]
 				y += arr[1][iz][iy][ix]
@@ -98,7 +98,7 @@ func drawVectors(img *image.RGBA, arr [3][][][]DataType, arrowSize int) {
 	}
 }
 
-func extrema(data []DataType) (min, max DataType) {
+func extrema(data []data.DataType) (min, max data.DataType) {
 	min = data[0]
 	max = data[0]
 	for _, d := range data {
@@ -114,7 +114,7 @@ func extrema(data []DataType) (min, max DataType) {
 
 // Draws rank 3 tensor (3D scalar field) as image
 // averages data over X (usually thickness of thin film)
-func drawFloats(img *image.RGBA, arr [][][]DataType, min, max DataType, colormap ...color.RGBA) {
+func drawFloats(img *image.RGBA, arr [][][]data.DataType, min, max data.DataType, colormap ...color.RGBA) {
 
 	w, h := len(arr[0][0]), len(arr[0])
 	d := len(arr)
@@ -122,12 +122,12 @@ func drawFloats(img *image.RGBA, arr [][][]DataType, min, max DataType, colormap
 
 	for iy := 0; iy < h; iy++ {
 		for ix := 0; ix < w; ix++ {
-			var v DataType = 0.
+			var v data.DataType = 0.
 			for iz := 0; iz < d; iz++ {
 				v += arr[iz][iy][ix]
 
 			}
-			v /= DataType(d)
+			v /= data.DataType(d)
 			img.Set(ix, (h-1)-iy, ColorMap(min, max, v, colormap...))
 		}
 	}
